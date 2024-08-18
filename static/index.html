@@ -51,6 +51,7 @@
 <script>
     let socket;
     const inputBox = document.getElementById('inputBox');
+    let isComposing = false;
     const reconnectInterval = 3000;  // 设置重连间隔时间 (毫秒)
 
     // WebSocket初始化函数
@@ -76,10 +77,19 @@
         };
     }
 
-    // 发送输入内容
+    // 监听合成事件
+    inputBox.addEventListener('compositionstart', () => {
+        isComposing = true;  // 开始中文输入
+    });
+
+    inputBox.addEventListener('compositionend', () => {
+        isComposing = false;  // 中文输入结束
+        socket.send(inputBox.value);  // 在结束合成时发送完整的内容
+    });
+
     inputBox.addEventListener('input', () => {
-        if (socket.readyState === WebSocket.OPEN) {
-            socket.send(inputBox.value);
+        if (!isComposing && socket.readyState === WebSocket.OPEN) {
+            socket.send(inputBox.value);  // 仅在不处于合成状态时发送内容
         }
     });
 
