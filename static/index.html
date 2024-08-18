@@ -56,7 +56,7 @@
 
     // WebSocket初始化函数
     function initWebSocket() {
-        socket = new WebSocket("ws://" + window.location.host + "/ws");
+        socket = new WebSocket("wss://" + window.location.host + "/ws");
 
         socket.onopen = () => {
             console.log('Connected to WebSocket');
